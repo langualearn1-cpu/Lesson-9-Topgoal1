@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose the Correct Word - Teacher Majed Al-Swaihri</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for playful, clear, and authentic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Cairo:wght@600;700;800;900&family=Titan+One&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --paper-bg: #FCFBF4;
+            --border-outer: #E9D5C3;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #ecfeff 50%, #fdf2f8 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-fredoka { font-family: 'Fredoka', cursive, sans-serif; }
+        .font-cairo { font-family: 'Cairo', sans-serif; }
+        .font-titan { font-family: 'Titan One', cursive; }
+
+        /* Exact Rainbow Pastel Outer Border matching Teacher Majed's worksheet */
+        .pastel-worksheet-border {
+            background: conic-gradient(
+                from 45deg,
+                #94CCE6 0deg 45deg,
+                #F8B0BD 45deg 90deg,
+                #FEDE80 90deg 140deg,
+                #A2D7B9 140deg 190deg,
+                #D0B5E4 190deg 240deg,
+                #F9B896 240deg 290deg,
+                #94CCE6 290deg 360deg
+            );
+            padding: 12px;
+            border-radius: 36px;
+            box-shadow: 0 24px 60px rgba(30, 41, 59, 0.12);
+        }
+
+        .worksheet-canvas {
+            background-color: var(--paper-bg);
+            background-image: 
+                radial-gradient(#e5dfc7 1.3px, transparent 1.3px),
+                radial-gradient(#f0ecdc 1.3px, var(--paper-bg) 1.3px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            border: 3.5px solid #635b50;
+            border-radius: 28px;
+            position: relative;
+        }
+
+        /* Wooden hanging board for Teacher Majed Al-Swaihri */
+        .wooden-sign-hang {
+            position: relative;
+            transform: rotate(-3.5deg);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .wooden-sign-hang:hover {
+            transform: rotate(-0.5deg) scale(1.05);
+        }
+        .wooden-plank {
+            background: linear-gradient(180deg, #ecd1b3 0%, #d8ad80 50%, #c49666 100%);
+            border: 2.8px solid #4A2F18;
+            border-radius: 14px;
+            box-shadow: 2px 6px 0px rgba(74, 47, 24, 0.3);
+        }
+
+        /* 3D Title "Choose the correct word from the box" */
+        .comic-worksheet-title {
+            font-family: 'Fredoka', cursive;
+            font-weight: 800;
+            color: #0284C7;
+            text-shadow: 
+                -2px -2px 0 #FFF,
+                 2px -2px 0 #FFF,
+                -2px  2px 0 #FFF,
+                 2px  2px 0 #FFF,
+                 0px  5px 0 #0369A1,
+                 0px  9px 12px rgba(2, 132, 199, 0.35);
+        }
+
+        /* Rainbow gradient border for the main Word Bank box */
+        .word-bank-container {
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(90deg, #F97316, #EAB308, #10B981, #06B6D4, #6366F1, #EC4899) border-box;
+            border: 3.5px solid transparent;
+            border-radius: 22px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.03), 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Draggable / Clickable Word Pill */
+        .word-token {
+            font-family: 'Fredoka', cursive;
+            font-weight: 700;
+            cursor: grab;
+            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+        }
+        .word-token:active {
+            cursor: grabbing;
+            transform: translateY(3px) scale(0.98);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+        }
+        .word-token.is-selected {
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 0 0 4px #0284C7, 0 8px 20px rgba(2, 132, 199, 0.4);
+            z-index: 30;
+        }
+        .word-token.is-placed {
+            opacity: 0.35;
+            filter: grayscale(40%);
+            transform: scale(0.94);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Picture Card Frame (Exact pastel rounded squares) */
+        .picture-box {
+            background: #FFFFFF;
+            border-radius: 26px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05), inset 0 2px 0 rgba(255, 255, 255, 0.9);
+            transition: all 0.25s ease;
+        }
+        .picture-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 24px rgba(0, 0, 0, 0.08);
+        }
+        .picture-box.active-speaking {
+            transform: scale(1.03);
+            box-shadow: 0 0 0 4px #38BDF8, 0 16px 30px rgba(56, 189, 248, 0.35);
+        }
+
+        /* Drop Target Slot under each picture */
+        .drop-line-slot {
+            min-height: 52px;
+            border-bottom: 3.5px dotted #64748B;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .drop-line-slot.drop-hover {
+            background-color: #E0F2FE;
+            border-bottom: 3.5px dashed #0284C7;
+            transform: scale(1.02);
+            border-radius: 12px;
+        }
+        .drop-line-slot.is-correct {
+            border-bottom: 3.5px solid #10B981;
+        }
+        .drop-line-slot.is-wrong {
+            border-bottom: 3.5px solid #EF4444;
+            animation: shakeError 0.4s ease;
+        }
+
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        @keyframes syncWave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); color: #0284C7; }
+        }
+        .audio-speaking-text {
+            animation: syncWave 0.6s infinite ease-in-out;
+        }
+
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 150;
+        }
+    </style>
+</head>
+
+<body class="p-2 sm:p-4 md:p-6 flex flex-col items-center">
+
+    <!-- Confetti canvas for celebrations -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <div class="w-full max-w-5xl pastel-worksheet-border">
+        <div class="worksheet-canvas p-3 sm:p-6 md:p-8">
+
+            <!-- Hand-drawn background paper ornaments matching worksheet (stars, hearts, ribbons) -->
+            <div class="pointer-events-none select-none absolute inset-0 overflow-hidden z-0 opacity-80">
+                <svg class="w-full h-full" viewBox="0 0 1000 1300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Confetti Stars -->
+                    <path d="M740 35L746 47L760 49L750 58L752 72L740 65L728 72L730 58L720 49L734 47L740 35Z" fill="#FDE068" stroke="#444" stroke-width="2"/>
+                    <path d="M915 48L920 58L931 60L923 67L925 78L915 72L905 78L907 67L899 60L910 58L915 48Z" fill="#FDE068" stroke="#444" stroke-width="2"/>
+                    <path d="M45 130L51 142L64 144L54 153L56 166L45 160L34 166L36 153L26 144L39 142L45 130Z" fill="#FDE068" stroke="#444" stroke-width="2"/>
+                    <path d="M960 920L966 932L979 934L969 943L971 956L960 950L949 956L951 943L941 934L954 932L960 920Z" fill="#FDE068" stroke="#444" stroke-width="2"/>
+                    <path d="M40 980L46 992L59 994L49 1003L51 1016L40 1010L29 1016L31 1003L21 994L34 992L40 980Z" fill="#FDE068" stroke="#444" stroke-width="2"/>
+                    <!-- Hearts -->
+                    <path d="M795 75C788 65 772 68 775 82C778 94 795 103 795 103C795 103 812 94 815 82C818 68 802 65 795 75Z" fill="#F696A8" stroke="#444" stroke-width="1.8"/>
+                    <path d="M940 120C934 112 922 114 924 125C926 135 940 142 940 142C940 142 954 135 956 125C958 114 946 112 940 120Z" fill="#F8AD9D" stroke="#444" stroke-width="1.8"/>
+                    <path d="M38 720C32 712 20 714 22 725C24 735 38 742 38 742C38 742 52 735 54 725C56 714 44 712 38 720Z" fill="#F8AD9D" stroke="#444" stroke-width="1.8"/>
+                    <path d="M950 680C944 672 932 674 934 685C936 695 950 702 950 702C950 702 964 695 966 685C968 674 956 672 950 680Z" fill="#F696A8" stroke="#444" stroke-width="1.8"/>
+                    <!-- Confetti coils & circles -->
+                    <circle cx="952" cy="240" r="7" fill="#8CD4C6" stroke="#444" stroke-width="1.8"/>
+                    <circle cx="52" cy="380" r="6" fill="#FDE068" stroke="#444" stroke-width="1.8"/>
+                    <rect x="850" y="30" width="16" height="9" rx="2.5" transform="rotate(25 850 30)" fill="#8CD4C6" stroke="#444" stroke-width="1.8"/>
+                    <rect x="25" y="220" width="16" height="9" rx="2.5" transform="rotate(-30 25 220)" fill="#F8AD9D" stroke="#444" stroke-width="1.8"/>
+                </svg>
+            </div>
+
+            <!-- Top Utility Bar: Stars, Voice Engine, and Audio Speed Controls -->
+            <div class="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2 border-b-2 border-dashed border-amber-200/90 text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-cairo text-xs font-bold text-slate-700">ورقة عمل تفاعلية ناطقة</span>
+                    <span class="text-slate-300">|</span>
+                    <span class="text-[11px] font-extrabold text-sky-700">100% English Audio</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <!-- Progress Stars -->
+                    <div class="bg-amber-50 border border-amber-300 rounded-xl px-2.5 py-1 flex items-center gap-1.5 shadow-sm">
+                        <span class="text-base">⭐</span>
+                        <span class="text-[10px] uppercase font-bold text-amber-700">Stars:</span>
+                        <span id="gameScore" class="text-xs font-black text-amber-900">0</span>
+                    </div>
+
+                    <!-- Voice Selector Dropdown (Compact & Truncated) -->
+                    <div class="flex items-center gap-1">
+                        <label for="voiceSelector" class="hidden sm:inline text-[10px] font-bold text-slate-500 uppercase">Voice:</label>
+                        <select id="voiceSelector" onchange="onVoiceSelectionChange()" class="bg-white text-slate-800 border border-sky-300 rounded-xl px-2 py-1 text-[11px] font-bold shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 max-w-[150px] sm:max-w-[200px] truncate">
+                            <option value="">Default English Voice</option>
+                        </select>
+                    </div>
+
+                    <!-- Audio Speed Toggle -->
+                    <button id="speedToggleBtn" onclick="toggleAudioSpeed()" class="bg-white hover:bg-sky-50 border border-sky-300 text-sky-900 px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 shadow-sm transition">
+                        <span id="speedIcon" class="text-sm">🐇</span>
+                        <span id="speedLabel" class="text-[11px]">Normal</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Centered Header: Compact Hanging Wooden Sign & Perfectly Scaled 3D Title -->
+            <header class="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-2 pb-4">
+                
+                <!-- Wooden Hanging Sign (المعلم: ماجد السويهري) -->
+                <div class="wooden-sign-hang shrink-0" onclick="teacherGreeting()" title="Click to hear Teacher Majed greet you in English!">
+                    <!-- Hanging rope wires -->
+                    <svg class="w-24 sm:w-28 h-6 mx-auto -mb-1 relative z-10" viewBox="0 0 160 36" fill="none">
+                        <line x1="80" y1="4" x2="25" y2="34" stroke="#5C3A1E" stroke-width="3" stroke-linecap="round"/>
+                        <line x1="80" y1="4" x2="135" y2="34" stroke="#5C3A1E" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="80" cy="4" r="5" fill="#D1C4B0" stroke="#4A2F18" stroke-width="2"/>
+                    </svg>
+                    <div class="wooden-plank px-3 py-1.5 text-center">
+                        <div class="flex items-center justify-center gap-1 text-[10px] font-black text-[#361f10] uppercase tracking-wider">
+                            <span>★</span>
+                            <span class="font-cairo text-xs">المعلم: ماجد السويهري</span>
+                            <span>★</span>
+                        </div>
+                        <div class="text-[10px] font-extrabold text-[#231206] tracking-tight">
+                            Teacher Majed Al-Swaihri
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Worksheet Comic Title: Centered and Proportional -->
+                <div class="flex-1 flex flex-col items-center justify-center text-center max-w-xl">
+                    <h1 class="comic-worksheet-title text-2xl sm:text-3xl md:text-4xl leading-tight">
+                        Choose the correct<br class="hidden sm:inline"> word from the box
+                    </h1>
+                    <div class="inline-flex items-center gap-2 mt-2 bg-white/95 border border-slate-200 px-3.5 py-1 rounded-full text-xs font-bold text-slate-700 shadow-sm whitespace-nowrap">
+                        <span class="font-cairo text-xs text-slate-800">اختر الكلمة المناسبة وضعها تحت الصورة</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-[11px] text-sky-700 font-extrabold">Interactive Worksheet</span>
+                    </div>
+                </div>
+
+            </header>
+
+            <section class="relative z-10 my-5">
+                <div class="word-bank-container p-4 sm:p-5">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-2 pb-2.5 mb-3 border-b border-slate-200">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">📦</span>
+                            <span class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-700">Word Box (بنك الكلمات)</span>
+                            <span id="remainingWordsCount" class="bg-sky-100 text-sky-800 text-xs font-black px-2.5 py-0.5 rounded-full border border-sky-300">
+                                9 words left
+                            </span>
+                        </div>
+                        <div class="text-xs text-slate-500 font-semibold flex items-center gap-1.5">
+                            <span>💡 Tap or drag a word to place it under the matching picture</span>
+                        </div>
+                    </div>
+
+                    <!-- Word Bank Tokens Grid (9 Words from worksheet) -->
+                    <div id="wordBankList" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+                        <!-- Dynamically filled with words: different, exciting, afraid, surprised, naughty, terrible, favorite, brilliant, dangerous -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Word & Audio Feedback Banner -->
+            <div id="audioStatusBar" class="relative z-10 mb-5 bg-white/95 border-2 border-sky-300 rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div id="speakerAvatar" class="w-12 h-12 rounded-2xl bg-sky-100 border-2 border-sky-400 flex items-center justify-center text-2xl shrink-0">
+                        🔊
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-bold text-slate-400 flex items-center gap-2 uppercase tracking-wider">
+                            <span>Synchronized English Audio</span>
+                            <span id="speakingPill" class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full text-[10px] font-extrabold">Ready</span>
+                        </div>
+                        <div class="flex flex-wrap items-baseline gap-2 mt-0.5">
+                            <span id="liveSpokenWord" class="font-fredoka text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-wide">
+                                Choose a word!
+                            </span>
+                            <span id="liveArabicMeaning" class="hidden font-cairo text-sm font-bold bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-lg border border-amber-300"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="playCurrentActiveWord()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-3 py-1.5 rounded-xl text-xs sm:text-sm shadow flex items-center gap-1.5 transition">
+                        <span>🔊</span>
+                        <span>Listen</span>
+                    </button>
+                    <button onclick="checkAllAnswers()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-1.5 rounded-xl text-xs sm:text-sm shadow flex items-center gap-1.5 transition">
+                        <span>✅</span>
+                        <span>Check Answers</span>
+                    </button>
+                    <button onclick="resetWorksheet()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold px-3 py-1.5 rounded-xl text-xs sm:text-sm shadow-sm transition">
+                        <span>🔄</span>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3x3 Grid Matching the Worksheet Layout -->
+            <section class="relative z-10">
+                <div id="worksheetGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6">
+                    <!-- Populated dynamically with the 9 exact pictures and drop slots -->
+                </div>
+            </section>
+
+            <!-- Bottom Feedback Banner -->
+            <div id="completionBanner" class="hidden relative z-10 mt-6 bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 sm:p-5 rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-4xl">🎉</span>
+                    <div>
+                        <div class="text-lg font-black font-fredoka">Outstanding Work! كل الإجابات صحيحة وممتازة!</div>
+                        <div class="text-xs sm:text-sm text-emerald-100 font-medium">You have correctly matched all 9 vocabulary words under their pictures!</div>
+                    </div>
+                </div>
+                <button onclick="resetWorksheet()" class="bg-white text-emerald-900 hover:bg-emerald-50 font-black px-5 py-2.5 rounded-2xl text-sm shadow-md transition shrink-0">
+                    Play Again 🔄
+                </button>
+            </div>
+
+            <footer class="relative z-10 mt-6 pt-3 border-t-2 border-dashed border-amber-300/70 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-bold text-slate-500">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                    <span>Teacher Majed Al-Swaihri • English Vocabulary Interactive Board</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="giveHint()" class="text-amber-700 hover:text-amber-800 bg-amber-100 hover:bg-amber-200 px-3 py-1 rounded-xl transition">
+                        💡 Need a Hint? (تلميح)
+                    </button>
+                    <button onclick="solveAllAutomatically()" class="text-sky-700 hover:underline">
+                        Show Solution (حل تلقائي)
+                    </button>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Authentic 9-Item Worksheet Dataset with Professional 3D Vector Artwork:
+         * Row 1: Surprised (Cyan), Dangerous (Red), Different (Sky Blue)
+         * Row 2: Naughty (Rose), Terrible (Pink), Exciting (Gold)
+         * Row 3: Brilliant (Cyan), Favorite (Mint), Afraid (Purple)
+         */
+        const WORKSHEET_ITEMS = [
+            {
+                id: 'surprised',
+                word: 'surprised',
+                arabicLabel: 'متفاجئ',
+                borderColor: '#22D3EE',
+                colorTheme: '#06B6D4',
+                bgTheme: '#ECFEFF',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="surpSphere" cx="36%" cy="30%" r="72%">
+                            <stop offset="0%" stop-color="#FFFDE7"/>
+                            <stop offset="35%" stop-color="#FFEE58"/>
+                            <stop offset="70%" stop-color="#FDD835"/>
+                            <stop offset="92%" stop-color="#F57F17"/>
+                            <stop offset="100%" stop-color="#D84315"/>
+                        </radialGradient>
+                        <radialGradient id="surpMouth" cx="50%" cy="25%" r="75%">
+                            <stop offset="0%" stop-color="#4E342E"/>
+                            <stop offset="60%" stop-color="#27130E"/>
+                            <stop offset="100%" stop-color="#0F0503"/>
+                        </radialGradient>
+                        <linearGradient id="tongueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#FF8A80"/>
+                            <stop offset="100%" stop-color="#E53935"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Gasp shock rays -->
+                    <g stroke="#F57F17" stroke-width="4" stroke-linecap="round" opacity="0.85">
+                        <line x1="80" y1="12" x2="80" y2="2"/>
+                        <line x1="48" y1="20" x2="40" y2="10"/>
+                        <line x1="112" y1="20" x2="120" y2="10"/>
+                        <line x1="22" y1="52" x2="12" y2="48"/>
+                        <line x1="138" y1="52" x2="148" y2="48"/>
+                    </g>
+                    <!-- 3D Face Sphere -->
+                    <circle cx="80" cy="84" r="62" fill="url(#surpSphere)" stroke="#E65100" stroke-width="3.5"/>
+                    <!-- Specular gloss highlight -->
+                    <ellipse cx="56" cy="46" rx="18" ry="9" transform="rotate(-28 56 46)" fill="#FFFFFF" opacity="0.55"/>
+                    <!-- High arched surprised eyebrows -->
+                    <path d="M42 48 Q56 30 70 44" fill="none" stroke="#3E2723" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M90 44 Q104 30 118 48" fill="none" stroke="#3E2723" stroke-width="5.5" stroke-linecap="round"/>
+                    <!-- Wide round eyes with dark ring and realistic pupils -->
+                    <ellipse cx="56" cy="64" rx="11" ry="15" fill="#212121" stroke="#3E2723" stroke-width="2"/>
+                    <ellipse cx="104" cy="64" rx="11" ry="15" fill="#212121" stroke="#3E2723" stroke-width="2"/>
+                    <circle cx="53" cy="58" r="4.5" fill="#FFFFFF"/>
+                    <circle cx="101" cy="58" r="4.5" fill="#FFFFFF"/>
+                    <circle cx="60" cy="68" r="2.2" fill="#FFFFFF" opacity="0.9"/>
+                    <circle cx="108" cy="68" r="2.2" fill="#FFFFFF" opacity="0.9"/>
+                    <!-- Wide gaping shocked O-mouth -->
+                    <ellipse cx="80" cy="108" rx="20" ry="28" fill="url(#surpMouth)" stroke="#3E2723" stroke-width="3.5"/>
+                    <!-- Tongue at bottom of mouth -->
+                    <path d="M66 122 C70 114, 90 114, 94 122 C92 132, 68 132, 66 122 Z" fill="url(#tongueGrad)"/>
+                    <!-- Subtle bottom chin shadow -->
+                    <ellipse cx="80" cy="144" rx="24" ry="4" fill="#BF360C" opacity="0.4"/>
+                </svg>`
+            },
+            {
+                id: 'dangerous',
+                word: 'dangerous',
+                arabicLabel: 'خطير',
+                borderColor: '#F87171',
+                colorTheme: '#EF4444',
+                bgTheme: '#FEF2F2',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="dangerBevel" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#991B1B"/>
+                            <stop offset="100%" stop-color="#7F1D1D"/>
+                        </linearGradient>
+                        <linearGradient id="dangerFront" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#FF6B6B"/>
+                            <stop offset="40%" stop-color="#EF4444"/>
+                            <stop offset="100%" stop-color="#B91C1C"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Radiating danger alert burst lines -->
+                    <g stroke="#EF4444" stroke-width="4.5" stroke-linecap="round">
+                        <line x1="24" y1="58" x2="10" y2="48"/>
+                        <line x1="20" y1="84" x2="4" y2="84"/>
+                        <line x1="24" y1="110" x2="10" y2="120"/>
+                        <line x1="136" y1="58" x2="150" y2="48"/>
+                        <line x1="140" y1="84" x2="156" y2="84"/>
+                        <line x1="136" y1="110" x2="150" y2="120"/>
+                    </g>
+                    <!-- 3D Bevel bottom extrusion shadow -->
+                    <path d="M71 18 C75 10, 85 10, 89 18 L147 122 C151 130, 146 142, 137 142 L23 142 C14 142, 9 130, 13 122 Z" 
+                          fill="url(#dangerBevel)"/>
+                    <!-- 3D Triangle main face -->
+                    <path d="M71 14 C75 6, 85 6, 89 14 L147 118 C151 126, 146 136, 137 136 L23 136 C14 136, 9 126, 13 118 Z" 
+                          fill="url(#dangerFront)" stroke="#7F1D1D" stroke-width="3"/>
+                    <!-- Inner glossy highlight stroke -->
+                    <path d="M75 22 C77 18, 83 18, 85 22 L137 116 C139 121, 136 127, 130 127 L30 127 C24 127, 21 121, 23 116 Z" 
+                          fill="none" stroke="#FFA39E" stroke-width="2.5" opacity="0.65"/>
+                    <!-- 3D Sculpted White Exclamation Mark -->
+                    <g filter="drop-shadow(0 2px 3px rgba(0,0,0,0.3))">
+                        <rect x="74" y="44" width="12" height="44" rx="6" fill="#FFFFFF"/>
+                        <circle cx="80" cy="108" r="8" fill="#FFFFFF"/>
+                    </g>
+                </svg>`
+            },
+            {
+                id: 'different',
+                word: 'different',
+                arabicLabel: 'مختلف',
+                borderColor: '#38BDF8',
+                colorTheme: '#0284C7',
+                bgTheme: '#F0F9FF',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="glassReflection" cx="35%" cy="30%" r="65%">
+                            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+                            <stop offset="45%" stop-color="#BAE6FD" stop-opacity="0.25"/>
+                            <stop offset="100%" stop-color="#7DD3FC" stop-opacity="0.55"/>
+                        </radialGradient>
+                        <linearGradient id="lensRing" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#60A5FA"/>
+                            <stop offset="50%" stop-color="#2563EB"/>
+                            <stop offset="100%" stop-color="#1D4ED8"/>
+                        </linearGradient>
+                        <linearGradient id="uniqueRed" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#FF6B6B"/>
+                            <stop offset="100%" stop-color="#DC2626"/>
+                        </linearGradient>
+                        <linearGradient id="neutralGrey" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#CBD5E1"/>
+                            <stop offset="100%" stop-color="#94A3B8"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Background Group of Neutral Figures (Identical & Translucent) -->
+                    <g opacity="0.55">
+                        <!-- Far Left -->
+                        <circle cx="20" cy="74" r="10" fill="url(#neutralGrey)"/>
+                        <path d="M6 108 C6 90, 34 90, 34 108 Z" fill="url(#neutralGrey)"/>
+                        <!-- Mid Left -->
+                        <circle cx="44" cy="70" r="11" fill="url(#neutralGrey)"/>
+                        <path d="M28 106 C28 88, 60 88, 60 106 Z" fill="url(#neutralGrey)"/>
+                        <!-- Mid Right -->
+                        <circle cx="116" cy="70" r="11" fill="url(#neutralGrey)"/>
+                        <path d="M100 106 C100 88, 132 88, 132 106 Z" fill="url(#neutralGrey)"/>
+                        <!-- Far Right -->
+                        <circle cx="140" cy="74" r="10" fill="url(#neutralGrey)"/>
+                        <path d="M126 108 C126 90, 154 90, 154 108 Z" fill="url(#neutralGrey)"/>
+                    </g>
+                    <!-- The Unique Center Red Figure (Different / Standout) -->
+                    <g filter="drop-shadow(0 3px 6px rgba(220,38,38,0.35))">
+                        <circle cx="72" cy="62" r="16" fill="url(#uniqueRed)" stroke="#B91C1C" stroke-width="2.5"/>
+                        <path d="M46 104 C46 80, 98 80, 98 104 Z" fill="url(#uniqueRed)" stroke="#B91C1C" stroke-width="2.5"/>
+                    </g>
+                    <!-- Glossy 3D Blue Magnifying Glass Focusing on the Different One -->
+                    <g filter="drop-shadow(3px 8px 12px rgba(15,23,42,0.25))">
+                        <!-- Handle with 3D Bevel -->
+                        <line x1="98" y1="98" x2="142" y2="142" stroke="#0F172A" stroke-width="17" stroke-linecap="round"/>
+                        <line x1="98" y1="98" x2="140" y2="140" stroke="#1D4ED8" stroke-width="13" stroke-linecap="round"/>
+                        <line x1="98" y1="98" x2="138" y2="138" stroke="#3B82F6" stroke-width="7" stroke-linecap="round"/>
+                        <!-- Metallic Chrome Ring -->
+                        <circle cx="72" cy="72" r="41" fill="none" stroke="#1E3A8A" stroke-width="11"/>
+                        <circle cx="72" cy="72" r="41" fill="none" stroke="url(#lensRing)" stroke-width="8"/>
+                        <!-- Glass Lens with Reflection -->
+                        <circle cx="72" cy="72" r="37" fill="url(#glassReflection)"/>
+                        <!-- Curved White Glint on Glass -->
+                        <path d="M48 50 Q72 38 96 50" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" opacity="0.85"/>
+                        <circle cx="92" cy="54" r="3" fill="#FFFFFF" opacity="0.9"/>
+                    </g>
+                </svg>`
+            },
+            {
+                id: 'naughty',
+                word: 'naughty',
+                arabicLabel: 'مشاغب',
+                borderColor: '#FB7185',
+                colorTheme: '#E11D48',
+                bgTheme: '#FFF1F2',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="hairGrad" cx="35%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#EA580C"/>
+                            <stop offset="60%" stop-color="#C2410C"/>
+                            <stop offset="100%" stop-color="#7C2D12"/>
+                        </radialGradient>
+                        <radialGradient id="faceGrad" cx="40%" cy="35%" r="65%">
+                            <stop offset="0%" stop-color="#FFF1E6"/>
+                            <stop offset="70%" stop-color="#FED7AA"/>
+                            <stop offset="100%" stop-color="#FDBA74"/>
+                        </radialGradient>
+                    </defs>
+                    <!-- Playful teasing energy sparkles -->
+                    <path d="M28 32 L34 38 M28 38 L34 32" stroke="#F43F5E" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M128 32 L134 38 M128 38 L134 32" stroke="#F43F5E" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Legs wide apart in active cheeky stance -->
+                    <path d="M62 108 L48 142 M98 108 L112 142" stroke="#E11D48" stroke-width="10" stroke-linecap="round"/>
+                    <!-- Dark Red Shoes -->
+                    <ellipse cx="44" cy="144" rx="10" ry="6" fill="#881337"/>
+                    <ellipse cx="116" cy="144" rx="10" ry="6" fill="#881337"/>
+                    <!-- Mustard-Yellow T-Shirt Body -->
+                    <rect x="56" y="76" width="48" height="38" rx="12" fill="#FBBF24" stroke="#D97706" stroke-width="3"/>
+                    <path d="M68 76 Q80 84 92 76" fill="none" stroke="#D97706" stroke-width="2.5"/>
+                    <!-- Hands to ears in teasing wiggle gesture -->
+                    <path d="M58 84 L36 60 L48 54" fill="none" stroke="#FED7AA" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M102 84 L124 60 L112 54" fill="none" stroke="#FED7AA" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Auburn Hair Pigtails behind ears -->
+                    <circle cx="50" cy="48" r="16" fill="url(#hairGrad)"/>
+                    <circle cx="110" cy="48" r="16" fill="url(#hairGrad)"/>
+                    <!-- Head -->
+                    <circle cx="80" cy="52" r="26" fill="url(#faceGrad)" stroke="#9A3412" stroke-width="2.8"/>
+                    <!-- Hair Bangs on Forehead -->
+                    <path d="M54 44 C56 22, 104 22, 106 44 C96 34, 64 34, 54 44 Z" fill="url(#hairGrad)"/>
+                    <!-- Rosy Cheeks -->
+                    <ellipse cx="62" cy="58" rx="6" ry="3.5" fill="#FB7185" opacity="0.75"/>
+                    <ellipse cx="98" cy="58" rx="6" ry="3.5" fill="#FB7185" opacity="0.75"/>
+                    <!-- Mischievous Wink (Left eye winking, Right eye open with sparkle) -->
+                    <path d="M64 48 L72 52 L64 56" fill="none" stroke="#1E293B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="92" cy="50" r="4" fill="#1E293B"/>
+                    <circle cx="94" cy="48" r="1.5" fill="#FFFFFF"/>
+                    <!-- Teasing laughing open mouth with tongue out -->
+                    <path d="M68 62 Q80 76 92 62 Z" fill="#881337" stroke="#4C0519" stroke-width="2"/>
+                    <path d="M74 65 Q80 74 86 65 Z" fill="#FB7185"/>
+                </svg>`
+            },
+            {
+                id: 'terrible',
+                word: 'terrible',
+                arabicLabel: 'سيئ / فظيع',
+                borderColor: '#FDA4AF',
+                colorTheme: '#DC2626',
+                bgTheme: '#FFF1F2',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bubbleExtrude" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#991B1B"/>
+                            <stop offset="100%" stop-color="#7F1D1D"/>
+                        </linearGradient>
+                        <linearGradient id="bubbleFrontFace" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#F87171"/>
+                            <stop offset="45%" stop-color="#EF4444"/>
+                            <stop offset="100%" stop-color="#DC2626"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Vibration alert ticks -->
+                    <line x1="22" y1="40" x2="14" y2="34" stroke="#DC2626" stroke-width="4" stroke-linecap="round"/>
+                    <line x1="138" y1="40" x2="146" y2="34" stroke="#DC2626" stroke-width="4" stroke-linecap="round"/>
+                    <!-- 3D Speech Bubble Extruded Bottom Shadow -->
+                    <path d="M34 26 H126 C138 26 144 32 144 44 V94 C144 106 138 112 126 112 H96 L80 136 L64 112 H34 C22 112 16 106 16 94 V44 C16 32 22 26 34 26 Z" 
+                          fill="url(#bubbleExtrude)"/>
+                    <!-- 3D Speech Bubble Main Front Face -->
+                    <path d="M34 20 H126 C138 20 144 26 144 38 V88 C144 100 138 106 126 106 H96 L80 130 L64 106 H34 C22 106 16 100 16 88 V38 C16 26 22 20 34 20 Z" 
+                          fill="url(#bubbleFrontFace)" stroke="#B91C1C" stroke-width="3"/>
+                    <!-- Glossy reflection bar at top of bubble -->
+                    <path d="M34 25 H126 C132 25 136 29 136 34 V42 C136 37 132 33 126 33 H34 C28 33 24 37 24 42 V34 C24 29 28 25 34 25 Z" 
+                          fill="#FFFFFF" opacity="0.35"/>
+                    <!-- Sculpted 3D White Thumbs-Down Icon -->
+                    <g filter="drop-shadow(0 3px 4px rgba(0,0,0,0.25))">
+                        <!-- Cuff/Base -->
+                        <rect x="96" y="38" width="16" height="34" rx="5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2.5"/>
+                        <!-- Fist and downward pointing thumb -->
+                        <path d="M92 38 H62 C53 38 49 44 50 53 L55 68 C57 73 62 76 68 76 H82 L77 94 C75 101 82 105 87 99 L98 75 V38 Z" 
+                              fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2.5" stroke-linejoin="round"/>
+                        <!-- Finger division grooves -->
+                        <line x1="62" y1="48" x2="80" y2="48" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="64" y1="57" x2="82" y2="57" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="67" y1="66" x2="84" y2="66" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/>
+                    </g>
+                </svg>`
+            },
+            {
+                id: 'exciting',
+                word: 'exciting',
+                arabicLabel: 'مثير',
+                borderColor: '#FCD34D',
+                colorTheme: '#D97706',
+                bgTheme: '#FEFCE8',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="starFaceSphere" cx="36%" cy="30%" r="72%">
+                            <stop offset="0%" stop-color="#FFFDE7"/>
+                            <stop offset="35%" stop-color="#FFEE58"/>
+                            <stop offset="70%" stop-color="#FDD835"/>
+                            <stop offset="92%" stop-color="#F57F17"/>
+                            <stop offset="100%" stop-color="#D84315"/>
+                        </radialGradient>
+                        <linearGradient id="goldStarFacet1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FFFFFF"/>
+                            <stop offset="40%" stop-color="#FDE047"/>
+                            <stop offset="100%" stop-color="#EAB308"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Joyful celebration sparks -->
+                    <g fill="#F59E0B">
+                        <polygon points="20,24 23,30 29,33 23,36 20,42 17,36 11,33 17,30"/>
+                        <polygon points="140,24 143,30 149,33 143,36 140,42 137,36 131,33 137,30"/>
+                    </g>
+                    <!-- 3D Face Sphere -->
+                    <circle cx="80" cy="84" r="62" fill="url(#starFaceSphere)" stroke="#E65100" stroke-width="3.5"/>
+                    <!-- Top Gloss Curve -->
+                    <ellipse cx="56" cy="46" rx="18" ry="9" transform="rotate(-28 56 46)" fill="#FFFFFF" opacity="0.5"/>
+                    <!-- Joyful Blushing Cheeks -->
+                    <ellipse cx="36" cy="88" rx="11" ry="7" fill="#FF7043" opacity="0.65"/>
+                    <ellipse cx="124" cy="88" rx="11" ry="7" fill="#FF7043" opacity="0.65"/>
+                    <!-- Huge Grinning Joyful Open Mouth -->
+                    <path d="M38 88 Q80 138 122 88 Z" fill="#3E2723" stroke="#271815" stroke-width="3"/>
+                    <!-- Gleaming Upper Teeth Band -->
+                    <path d="M44 89 Q80 102 116 89 L112 99 Q80 109 48 99 Z" fill="#FFFFFF"/>
+                    <!-- Happy Tongue -->
+                    <path d="M60 116 Q80 106 100 116 Q80 134 60 116 Z" fill="#FF5252"/>
+                    <!-- Huge Golden 3D Star Eyes -->
+                    <g filter="drop-shadow(0 4px 6px rgba(0,0,0,0.25))">
+                        <!-- Left Star -->
+                        <polygon points="52,38 59,57 78,58 63,71 69,90 52,79 35,90 41,71 26,58 45,57" 
+                                 fill="url(#goldStarFacet1)" stroke="#B45309" stroke-width="3" stroke-linejoin="round"/>
+                        <!-- Right Star -->
+                        <polygon points="108,38 115,57 134,58 119,71 125,90 108,79 91,90 97,71 82,58 101,57" 
+                                 fill="url(#goldStarFacet1)" stroke="#B45309" stroke-width="3" stroke-linejoin="round"/>
+                    </g>
+                </svg>`
+            },
+            {
+                id: 'brilliant',
+                word: 'brilliant',
+                arabicLabel: 'ذكي',
+                borderColor: '#67E8F9',
+                colorTheme: '#0284C7',
+                bgTheme: '#F0F9FF',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="bulbGlowCircle" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#FFFDE7"/>
+                            <stop offset="50%" stop-color="#FDE047"/>
+                            <stop offset="85%" stop-color="#F59E0B"/>
+                            <stop offset="100%" stop-color="#D97706"/>
+                        </radialGradient>
+                    </defs>
+                    <!-- Floating Golden Idea Lightbulb at top right -->
+                    <g transform="translate(94, 10)" filter="drop-shadow(0 3px 6px rgba(245,158,11,0.4))">
+                        <!-- Light Ray Bursts -->
+                        <g stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round">
+                            <line x1="20" y1="0" x2="20" y2="6"/>
+                            <line x1="38" y1="8" x2="33" y2="13"/>
+                            <line x1="2" y1="8" x2="7" y2="13"/>
+                            <line x1="42" y1="24" x2="36" y2="24"/>
+                            <line x1="-2" y1="24" x2="4" y2="24"/>
+                        </g>
+                        <!-- Glass Bulb Body -->
+                        <path d="M8 26 C8 12, 32 12, 32 26 C32 33, 27 36, 27 42 L13 42 C13 36, 8 33, 8 26 Z" 
+                              fill="url(#bulbGlowCircle)" stroke="#B45309" stroke-width="2.5"/>
+                        <!-- Specular Bulb Glint -->
+                        <ellipse cx="15" cy="22" rx="3.5" ry="5.5" fill="#FFFFFF" opacity="0.75"/>
+                        <!-- Metallic Screw Base -->
+                        <rect x="14" y="42" width="12" height="6" rx="2" fill="#94A3B8" stroke="#475569" stroke-width="1.8"/>
+                    </g>
+                    <!-- Smart Young Professional in Suit -->
+                    <!-- Navy Suit Torso -->
+                    <path d="M32 150 L42 98 L92 98 L100 150 Z" fill="#1E293B" stroke="#0F172A" stroke-width="3"/>
+                    <!-- White Collared Shirt -->
+                    <polygon points="58,98 76,98 67,120" fill="#FFFFFF"/>
+                    <!-- Cyan Tie -->
+                    <polygon points="64,100 70,100 72,120 67,126 62,120" fill="#0284C7"/>
+                    <!-- Right Arm raised pointing up to idea -->
+                    <path d="M88 106 L110 68 L102 62 L82 100 Z" fill="#1E293B" stroke="#0F172A" stroke-width="2.5"/>
+                    <circle cx="108" cy="58" r="7" fill="#FDBA74" stroke="#C2410C" stroke-width="2"/>
+                    <!-- Pointing index finger -->
+                    <rect x="107" y="44" width="6.5" height="15" rx="3" fill="#FDBA74" stroke="#C2410C" stroke-width="2"/>
+                    <!-- Head & Confident Expression -->
+                    <circle cx="66" cy="68" r="25" fill="#FED7AA" stroke="#9A3412" stroke-width="2.8"/>
+                    <!-- Neat Professional Haircut -->
+                    <path d="M42 62 C42 38, 90 36, 94 56 C86 48, 54 48, 42 62 Z" fill="#0F172A"/>
+                    <!-- Eyes & Smile -->
+                    <circle cx="57" cy="67" r="3.5" fill="#0F172A"/>
+                    <circle cx="75" cy="67" r="3.5" fill="#0F172A"/>
+                    <circle cx="58.5" cy="65.5" r="1.3" fill="#FFFFFF"/>
+                    <circle cx="76.5" cy="65.5" r="1.3" fill="#FFFFFF"/>
+                    <path d="M57 79 Q66 88 75 79" fill="none" stroke="#9A3412" stroke-width="3.2" stroke-linecap="round"/>
+                </svg>`
+            },
+            {
+                id: 'favorite',
+                word: 'favorite',
+                arabicLabel: 'مفضل',
+                borderColor: '#6EE7B7',
+                colorTheme: '#059669',
+                bgTheme: '#ECFDF5',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="favSmileySphere" cx="35%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#FFFDE7"/>
+                            <stop offset="50%" stop-color="#FBC02D"/>
+                            <stop offset="100%" stop-color="#F57F17"/>
+                        </radialGradient>
+                        <linearGradient id="favBlueBadge" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#60A5FA"/>
+                            <stop offset="50%" stop-color="#2563EB"/>
+                            <stop offset="100%" stop-color="#1E40AF"/>
+                        </linearGradient>
+                        <linearGradient id="favRedMedal" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#F87171"/>
+                            <stop offset="50%" stop-color="#EF4444"/>
+                            <stop offset="100%" stop-color="#B91C1C"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Golden Twinkle Sparkles -->
+                    <polygon points="18,34 21,39 26,41 21,43 18,48 15,43 10,41 15,39" fill="#F59E0B"/>
+                    <polygon points="144,80 146,84 150,86 146,88 144,92 142,88 138,86 142,84" fill="#F59E0B"/>
+                    <!-- Badge 1: Top Yellow Smiley Badge (Large, 3D) -->
+                    <g transform="translate(18, 12)" filter="drop-shadow(0 3px 5px rgba(0,0,0,0.2))">
+                        <circle cx="50" cy="50" r="38" fill="url(#favSmileySphere)" stroke="#C67D0A" stroke-width="3"/>
+                        <ellipse cx="38" cy="42" rx="4.5" ry="6.5" fill="#451A03"/>
+                        <ellipse cx="62" cy="42" rx="4.5" ry="6.5" fill="#451A03"/>
+                        <path d="M34 58 Q50 75 66 58" fill="none" stroke="#451A03" stroke-width="4.2" stroke-linecap="round"/>
+                        <circle cx="32" cy="54" r="4.5" fill="#FF7043" opacity="0.6"/>
+                        <circle cx="68" cy="54" r="4.5" fill="#FF7043" opacity="0.6"/>
+                    </g>
+                    <!-- Badge 2: Right Blue Thumbs-Up Circle Badge -->
+                    <g transform="translate(80, 52)" filter="drop-shadow(0 3px 6px rgba(30,64,175,0.35))">
+                        <circle cx="38" cy="38" r="30" fill="url(#favBlueBadge)" stroke="#1E3A8A" stroke-width="3"/>
+                        <!-- White 3D Thumbs-Up -->
+                        <path d="M30 36 L35 22 C37 19 42 19 42 24 V28 H51 C55 28 57 31 56 34 L52 46 C51 49 47 51 43 51 H32 V36 Z" 
+                              fill="#FFFFFF" stroke="#DBEAFE" stroke-width="1.8"/>
+                        <rect x="23" y="36" width="8" height="15" rx="2" fill="#FFFFFF"/>
+                    </g>
+                    <!-- Badge 3: Bottom Red Gold-Star Medal Badge -->
+                    <g transform="translate(36, 84)" filter="drop-shadow(0 4px 8px rgba(185,28,28,0.4))">
+                        <circle cx="40" cy="40" r="32" fill="url(#favRedMedal)" stroke="#7F1D1D" stroke-width="3"/>
+                        <circle cx="40" cy="40" r="26" fill="none" stroke="#FCA5A5" stroke-width="2" opacity="0.6"/>
+                        <!-- 5-Pointed Gold Star -->
+                        <polygon points="40,20 46,32 59,33 49,42 53,55 40,48 27,55 31,42 21,33 34,32" 
+                                 fill="#FDE047" stroke="#CA8A04" stroke-width="2.2" stroke-linejoin="round"/>
+                    </g>
+                </svg>`
+            },
+            {
+                id: 'afraid',
+                word: 'afraid',
+                arabicLabel: 'خائف',
+                borderColor: '#C084FC',
+                colorTheme: '#7E22CE',
+                bgTheme: '#FAF5FF',
+                svg: `
+                <svg viewBox="0 0 160 160" class="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="afraidHair" cx="40%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#EA580C"/>
+                            <stop offset="70%" stop-color="#C2410C"/>
+                            <stop offset="100%" stop-color="#7C2D12"/>
+                        </radialGradient>
+                        <radialGradient id="afraidSkin" cx="40%" cy="35%" r="65%">
+                            <stop offset="0%" stop-color="#FFF1E6"/>
+                            <stop offset="70%" stop-color="#FED7AA"/>
+                            <stop offset="100%" stop-color="#FDBA74"/>
+                        </radialGradient>
+                    </defs>
+                    <!-- Tremble vibration waves around head -->
+                    <g stroke="#9333EA" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6">
+                        <path d="M18 54 Q14 62 18 70"/>
+                        <path d="M142 54 Q146 62 142 70"/>
+                    </g>
+                    <!-- Blue Dress Torso with White Peter Pan Collar -->
+                    <path d="M38 152 C38 112, 122 112, 122 152 Z" fill="#1D4ED8" stroke="#1E3A8A" stroke-width="3"/>
+                    <path d="M64 114 C70 124, 80 124, 80 124 C80 124, 90 124, 96 114 C92 110, 68 110, 64 114 Z" fill="#FFFFFF"/>
+                    <!-- Voluminous Wavy Auburn Hair behind shoulders -->
+                    <path d="M38 88 C22 52, 38 20, 80 20 C122 20, 138 52, 122 88 C130 110, 110 122, 104 112 C92 126, 68 126, 56 112 C50 122, 30 110, 38 88 Z" 
+                          fill="url(#afraidHair)" stroke="#9A3412" stroke-width="3"/>
+                    <!-- Head -->
+                    <circle cx="80" cy="72" r="26" fill="url(#afraidSkin)" stroke="#9A3412" stroke-width="2.5"/>
+                    <!-- Forehead hair bangs -->
+                    <path d="M60 54 C64 44, 96 44, 100 54 C92 48, 68 48, 60 54 Z" fill="#C2410C"/>
+                    <!-- Trembling Worried Eyebrows (slanted up in center) -->
+                    <path d="M58 56 Q68 61 74 54" fill="none" stroke="#78350F" stroke-width="3.5" stroke-linecap="round"/>
+                    <path d="M102 56 Q92 61 86 54" fill="none" stroke="#78350F" stroke-width="3.5" stroke-linecap="round"/>
+                    <!-- Wide Frightened Eyes -->
+                    <ellipse cx="66" cy="65" rx="6.5" ry="8.5" fill="#1E293B"/>
+                    <ellipse cx="94" cy="65" rx="6.5" ry="8.5" fill="#1E293B"/>
+                    <circle cx="64" cy="62" r="2.5" fill="#FFFFFF"/>
+                    <circle cx="92" cy="62" r="2.5" fill="#FFFFFF"/>
+                    <!-- Shivering O-Mouth with trembling tongue -->
+                    <ellipse cx="80" cy="85" rx="8.5" ry="12" fill="#7F1D1D" stroke="#450A0A" stroke-width="2.2"/>
+                    <ellipse cx="80" cy="89" rx="5" ry="5" fill="#F87171"/>
+                    <!-- Cold sweat drops on temple -->
+                    <path d="M50 62 C50 58, 55 56, 55 62 C55 65, 50 67, 50 62 Z" fill="#60A5FA"/>
+                    <!-- Trembling Hands Clasping Cheeks in Fear -->
+                    <g transform="translate(48, 68)">
+                        <path d="M6 26 L2 8 C2 3, 8 1, 10 5 L15 22 Z" fill="#FED7AA" stroke="#9A3412" stroke-width="2.2"/>
+                        <path d="M14 26 L12 5 C12 0, 18 -1, 20 4 L22 22 Z" fill="#FED7AA" stroke="#9A3412" stroke-width="2.2"/>
+                    </g>
+                    <g transform="translate(92, 68)">
+                        <path d="M15 26 L19 8 C19 3, 13 1, 11 5 L6 22 Z" fill="#FED7AA" stroke="#9A3412" stroke-width="2.2"/>
+                        <path d="M7 26 L9 5 C9 0, 3 -1, 1 4 L-1 22 Z" fill="#FED7AA" stroke="#9A3412" stroke-width="2.2"/>
+                    </g>
+                </svg>`
+            }
+        ];
+
+        // Application State
+        let currentAnswers = {}; // { [itemId]: wordId }
+        let selectedWordId = null;
+        let lastSpokenWord = 'Choose a word!';
+        let gameScore = 0;
+        let isSlowSpeed = false;
+        let isEvaluationActive = false; // Only show green/red when user clicks 'Check Answers'
+
+        // Pure Dictionary Mapping (Used strictly for translating the chosen word itself, never revealing slot answers)
+        const VOCAB_DICTIONARY = {
+            'different': 'مختلف',
+            'exciting': 'مثير',
+            'afraid': 'خائف',
+            'surprised': 'متفاجئ',
+            'naughty': 'مشاغب',
+            'terrible': 'سيئ / فظيع',
+            'favorite': 'مفضل',
+            'brilliant': 'ذكي',
+            'dangerous': 'خطير'
+        };
+
+        // High Quality Natural Voice Engine State
+        let bestActiveVoice = null;
+        let availableEngVoices = [];
+
+        // Web Audio Synthesizer (Zero external audio files required)
+        let audioContext = null;
+        function getWebAudio() {
+            if (!audioContext) {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) audioContext = new AudioCtx();
+            }
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            return audioContext;
+        }
+
+        function playSynthSound(type) {
+            try {
+                const ctx = getWebAudio();
+                if (!ctx) return;
+                const now = ctx.currentTime;
+
+                if (type === 'tap') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(520, now);
+                    osc.frequency.exponentialRampToValueAtTime(780, now + 0.05);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'drop') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.08);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'correct') {
+                    const freqs = [523.25, 659.25, 783.99, 1046.50];
+                    freqs.forEach((f, i) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(f, now + i * 0.07);
+                        gain.gain.setValueAtTime(0.18, now + i * 0.07);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.22);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + i * 0.07);
+                        osc.stop(now + i * 0.07 + 0.22);
+                    });
+                } else if (type === 'wrong') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(260, now);
+                    osc.frequency.linearRampToValueAtTime(160, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch (e) {
+                // AudioContext guarded
+            }
+        }
+
+        /**
+         * Voice Quality Engine: Evaluates installed voices to select high quality natural English voice
+         */
+        function evaluateVoiceQuality(voice) {
+            let score = 0;
+            const name = voice.name.toLowerCase();
+            const lang = voice.lang.toLowerCase();
+
+            if (!lang.startsWith('en')) return -1000;
+
+            if (name.includes('natural') || name.includes('neural') || name.includes('studio') || name.includes('journey')) score += 80;
+            if (name.includes('online')) score += 40;
+            if (name.includes('enhanced') || name.includes('premium')) score += 50;
+
+            if (name.includes('google')) score += 60;
+            if (name.includes('microsoft')) score += 55;
+            if (name.includes('samantha') || name.includes('siri') || name.includes('alex') || name.includes('ava') || name.includes('oliver')) score += 45;
+
+            if (lang === 'en-us') score += 25;
+            else if (lang === 'en-gb') score += 20;
+
+            if (name.includes('espeak') || name.includes('desktop') || name.includes('compact')) score -= 50;
+            return score;
+        }
+
+        function initVoiceEngine() {
+            if (!('speechSynthesis' in window)) return;
+
+            const populate = () => {
+                const voices = window.speechSynthesis.getVoices();
+                if (!voices || voices.length === 0) return;
+
+                availableEngVoices = voices
+                    .filter(v => v.lang.toLowerCase().startsWith('en'))
+                    .sort((a, b) => evaluateVoiceQuality(b) - evaluateVoiceQuality(a));
+
+                if (availableEngVoices.length === 0) availableEngVoices = voices;
+
+                if (!bestActiveVoice || !availableEngVoices.includes(bestActiveVoice)) {
+                    bestActiveVoice = availableEngVoices[0];
+                }
+
+                const selector = document.getElementById('voiceSelector');
+                if (selector) {
+                    selector.innerHTML = availableEngVoices.map(v => {
+                        let tag = 'HD';
+                        const n = v.name.toLowerCase();
+                        if (n.includes('natural') || n.includes('neural') || n.includes('studio')) tag = '🌟 Natural';
+                        else if (n.includes('google')) tag = '✨ Google';
+                        else if (n.includes('microsoft')) tag = '💎 Microsoft';
+                        else if (n.includes('apple') || n.includes('samantha') || n.includes('siri')) tag = '🍎 Apple';
+
+                        const cleanName = v.name.replace(/Microsoft|Google|Apple|English|United States|Desktop|Mobile/gi, '').trim() || v.name;
+                        return `<option value="${v.name}" ${v.name === bestActiveVoice.name ? 'selected' : ''}>${tag} - ${cleanName} (${v.lang})</option>`;
+                    }).join('');
+                }
+            };
+
+            populate();
+            if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                window.speechSynthesis.onvoiceschanged = populate;
+            }
+        }
+
+        function onVoiceSelectionChange() {
+            const selector = document.getElementById('voiceSelector');
+            const chosen = availableEngVoices.find(v => v.name === selector.value);
+            if (chosen) {
+                bestActiveVoice = chosen;
+                playSynthSound('tap');
+                speakWord('brilliant');
+            }
+        }
+
+        function toggleAudioSpeed() {
+            isSlowSpeed = !isSlowSpeed;
+            document.getElementById('speedIcon').textContent = isSlowSpeed ? '🐢' : '🐇';
+            document.getElementById('speedLabel').textContent = isSlowSpeed ? 'Slow' : 'Normal';
+            playSynthSound('tap');
+            if (lastSpokenWord && lastSpokenWord !== 'Choose a word!') {
+                speakWord(lastSpokenWord);
+            }
+        }
+
+        /**
+         * Speaks an English word with synchronized UI illumination (No letter spelling, whole word only)
+         * STRICT: Does NOT highlight or hint at any picture cards!
+         */
+        function speakWord(wordText, callback = null) {
+            if (!('speechSynthesis' in window)) {
+                if (callback) callback();
+                return;
+            }
+
+            try {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(wordText);
+                utter.lang = bestActiveVoice ? bestActiveVoice.lang : 'en-US';
+                if (bestActiveVoice) utter.voice = bestActiveVoice;
+
+                utter.rate = isSlowSpeed ? 0.65 : 0.92;
+                utter.pitch = 1.0;
+                utter.volume = 1.0;
+
+                const liveWord = document.getElementById('liveSpokenWord');
+                const liveArabic = document.getElementById('liveArabicMeaning');
+                const speakingPill = document.getElementById('speakingPill');
+
+                lastSpokenWord = wordText;
+                liveWord.textContent = wordText;
+                liveWord.classList.add('audio-speaking-text');
+                speakingPill.textContent = 'Speaking...';
+                speakingPill.className = 'bg-sky-500 text-white px-2 py-0.5 rounded-full text-[10px] font-extrabold animate-pulse';
+
+                // Display translation for the spoken word only, without touching any picture cards
+                const lower = wordText.toLowerCase();
+                if (VOCAB_DICTIONARY[lower]) {
+                    liveArabic.textContent = VOCAB_DICTIONARY[lower];
+                    liveArabic.classList.remove('hidden');
+                } else {
+                    liveArabic.classList.add('hidden');
+                }
+
+                utter.onend = () => {
+                    liveWord.classList.remove('audio-speaking-text');
+                    speakingPill.textContent = 'Ready';
+                    speakingPill.className = 'bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full text-[10px] font-extrabold';
+                    if (callback) callback();
+                };
+
+                utter.onerror = () => {
+                    liveWord.classList.remove('audio-speaking-text');
+                    speakingPill.textContent = 'Ready';
+                    if (callback) callback();
+                };
+
+                if (window.speechSynthesis.paused) {
+                    window.speechSynthesis.resume();
+                }
+
+                window.speechSynthesis.speak(utter);
+            } catch (err) {
+                if (callback) callback();
+            }
+        }
+
+        function playCurrentActiveWord() {
+            if (lastSpokenWord && lastSpokenWord !== 'Choose a word!') {
+                speakWord(lastSpokenWord);
+            } else {
+                teacherGreeting();
+            }
+        }
+
+        function teacherGreeting() {
+            playSynthSound('tap');
+            const liveWord = document.getElementById('liveSpokenWord');
+            const liveArabic = document.getElementById('liveArabicMeaning');
+            liveWord.textContent = 'Teacher: Majed Al-Swaihri';
+            liveArabic.classList.add('hidden');
+            speakWord("Hello students! Look at each picture, then choose the correct word from the box and place it below!");
+        }
+
+        function renderWordBank() {
+            const container = document.getElementById('wordBankList');
+            // The 9 words in the exact order shown on the worksheet box
+            const wordsList = [
+                'different', 'exciting', 'afraid', 'surprised', 'naughty',
+                'terrible', 'favorite', 'brilliant', 'dangerous'
+            ];
+
+            let placedCount = 0;
+            container.innerHTML = wordsList.map(w => {
+                const isPlaced = Object.values(currentAnswers).includes(w);
+                if (isPlaced) placedCount++;
+
+                const isSelected = selectedWordId === w;
+                const itemData = WORKSHEET_ITEMS.find(it => it.word === w);
+
+                return `
+                <div id="word-token-${w}"
+                     draggable="${!isPlaced}"
+                     ondragstart="handleDragStart(event, '${w}')"
+                     onclick="handleWordTokenClick('${w}')"
+                     class="word-token text-base sm:text-lg px-4 py-2 rounded-2xl border-2 flex items-center gap-2 select-none ${
+                        isPlaced 
+                        ? 'is-placed bg-slate-100 text-slate-400 border-slate-300' 
+                        : isSelected 
+                            ? 'is-selected bg-sky-500 text-white border-sky-600' 
+                            : 'bg-white hover:bg-amber-50 text-slate-800 border-slate-300'
+                     }">
+                    <span>${w}</span>
+                    <span class="text-[11px] font-cairo font-bold opacity-80 ${isSelected ? 'text-sky-100' : 'text-slate-500'}" dir="rtl">
+                        (${itemData ? itemData.arabicLabel : ''})
+                    </span>
+                    <button onclick="event.stopPropagation(); speakWord('${w}')" class="text-xs hover:scale-125 transition ml-0.5" title="Listen">
+                        🔊
+                    </button>
+                </div>`;
+            }).join('');
+
+            const remaining = wordsList.length - placedCount;
+            document.getElementById('remainingWordsCount').textContent = `${remaining} word${remaining === 1 ? '' : 's'} left`;
+        }
+
+        function renderWorksheetGrid() {
+            const grid = document.getElementById('worksheetGrid');
+            grid.innerHTML = WORKSHEET_ITEMS.map((item, index) => {
+                const placedWord = currentAnswers[item.id] || null;
+                const isCorrect = placedWord === item.word;
+
+                // Only show colored verification state if the user explicitly clicked 'Check Answers'
+                let slotStatusClass = '';
+                if (isEvaluationActive && placedWord) {
+                    slotStatusClass = isCorrect ? 'is-correct' : 'is-wrong';
+                }
+
+                return `
+                <div class="flex flex-col items-center">
+                    <!-- Picture Card (No hints, clean artwork) -->
+                    <div id="pic-card-${item.id}"
+                         onclick="handlePictureCardClick('${item.id}')"
+                         style="border-color: ${item.borderColor};"
+                         class="picture-box w-full max-w-[240px] aspect-square p-4 sm:p-5 flex flex-col items-center justify-center cursor-pointer border-[3.5px] relative group"
+                         title="Click to place the selected word under this picture">
+                        
+                        <!-- Number badge -->
+                        <span class="absolute top-2.5 left-3 font-fredoka font-black text-xs text-slate-300 group-hover:text-slate-500 transition">
+                            #${index + 1}
+                        </span>
+
+                        <!-- Central SVG Artwork -->
+                        <div class="transition-transform duration-300 group-hover:scale-110 flex items-center justify-center pointer-events-none">
+                            ${item.svg}
+                        </div>
+                    </div>
+
+                    <!-- Dotted Line Drop Slot Matching the Worksheet (No spoiler translations or premature borders) -->
+                    <div class="w-full max-w-[240px] mt-2 px-1">
+                        <div id="drop-slot-${item.id}"
+                             ondragover="handleDragOver(event)"
+                             ondragleave="handleDragLeave(event, '${item.id}')"
+                             ondrop="handleDrop(event, '${item.id}')"
+                             onclick="handleSlotClick('${item.id}')"
+                             class="drop-line-slot flex items-center justify-between px-2 cursor-pointer ${slotStatusClass}">
+                            
+                            ${placedWord ? `
+                                <div class="flex items-center gap-1.5 flex-1 justify-center py-1">
+                                    <span class="font-fredoka text-lg sm:text-xl font-bold text-slate-900">${placedWord}</span>
+                                    <span class="font-cairo text-xs font-bold text-slate-600 bg-white/80 px-2 py-0.5 rounded-md border border-slate-200" dir="rtl">
+                                        ${VOCAB_DICTIONARY[placedWord] || ''}
+                                    </span>
+                                </div>
+                                <button onclick="event.stopPropagation(); removePlacedWord('${item.id}')"
+                                        class="w-6 h-6 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold flex items-center justify-center transition"
+                                        title="Remove word">
+                                    ✕
+                                </button>
+                            ` : `
+                                <div class="w-full text-center text-xs font-semibold text-slate-400 select-none py-2">
+                                    ..................................................
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Drag and Drop Handlers
+        function handleDragStart(e, word) {
+            e.dataTransfer.setData('text/plain', word);
+            selectedWordId = word;
+            playSynthSound('tap');
+            speakWord(word);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drop-hover');
+        }
+
+        function handleDragLeave(e, itemId) {
+            const slot = document.getElementById(`drop-slot-${itemId}`);
+            if (slot) slot.classList.remove('drop-hover');
+        }
+
+        function handleDrop(e, targetItemId) {
+            e.preventDefault();
+            const slot = document.getElementById(`drop-slot-${targetItemId}`);
+            if (slot) slot.classList.remove('drop-hover');
+
+            const droppedWord = e.dataTransfer.getData('text/plain') || selectedWordId;
+            if (droppedWord) {
+                placeWordInSlot(targetItemId, droppedWord);
+            }
+        }
+
+        // Tap-to-Place Handlers for mobile & desktop
+        function handleWordTokenClick(word) {
+            playSynthSound('tap');
+            speakWord(word);
+
+            if (Object.values(currentAnswers).includes(word)) {
+                return;
+            }
+
+            if (selectedWordId === word) {
+                selectedWordId = null; // deselect
+            } else {
+                selectedWordId = word;
+            }
+            renderWordBank();
+        }
+
+        function handleSlotClick(itemId) {
+            if (selectedWordId) {
+                placeWordInSlot(itemId, selectedWordId);
+                selectedWordId = null;
+            } else {
+                if (currentAnswers[itemId]) {
+                    speakWord(currentAnswers[itemId]);
+                }
+            }
+        }
+
+        function handlePictureCardClick(itemId) {
+            if (selectedWordId) {
+                placeWordInSlot(itemId, selectedWordId);
+                selectedWordId = null;
+            } else if (currentAnswers[itemId]) {
+                speakWord(currentAnswers[itemId]);
+            }
+        }
+
+        function placeWordInSlot(targetItemId, word) {
+            // Remove word from any previous slot if placed there
+            for (const [key, val] of Object.entries(currentAnswers)) {
+                if (val === word) {
+                    delete currentAnswers[key];
+                }
+            }
+
+            currentAnswers[targetItemId] = word;
+            isEvaluationActive = false; // Reset evaluation feedback so player is not hinted
+            playSynthSound('drop');
+            speakWord(word);
+
+            // Re-render without revealing any correct/incorrect hints
+            renderWordBank();
+            renderWorksheetGrid();
+        }
+
+        function removePlacedWord(itemId) {
+            playSynthSound('tap');
+            delete currentAnswers[itemId];
+            isEvaluationActive = false;
+            renderWordBank();
+            renderWorksheetGrid();
+        }
+
+        function checkAllAnswers() {
+            isEvaluationActive = true;
+            let correctCount = 0;
+            const total = WORKSHEET_ITEMS.length;
+
+            WORKSHEET_ITEMS.forEach(item => {
+                const slot = document.getElementById(`drop-slot-${item.id}`);
+                const placed = currentAnswers[item.id];
+
+                if (!slot) return;
+
+                if (placed === item.word) {
+                    correctCount++;
+                    slot.classList.add('is-correct');
+                    slot.classList.remove('is-wrong');
+                } else if (placed) {
+                    slot.classList.add('is-wrong');
+                    slot.classList.remove('is-correct');
+                } else {
+                    slot.classList.remove('is-correct', 'is-wrong');
+                }
+            });
+
+            if (correctCount === total) {
+                playSynthSound('correct');
+                fireConfetti();
+                addScore(50);
+                document.getElementById('completionBanner').classList.remove('hidden');
+                speakWord("Brilliant job! All answers are completely correct!");
+            } else if (correctCount > 0) {
+                playSynthSound('tap');
+                addScore(correctCount * 5);
+                speakWord(`You got ${correctCount} out of 9 correct! Keep trying!`);
+            } else {
+                playSynthSound('wrong');
+                speakWord("Try again! Match each word to the correct picture!");
+            }
+        }
+
+        function resetWorksheet() {
+            currentAnswers = {};
+            selectedWordId = null;
+            isEvaluationActive = false;
+            document.getElementById('completionBanner').classList.add('hidden');
+            playSynthSound('tap');
+            renderWordBank();
+            renderWorksheetGrid();
+            speakWord("Worksheet reset! Choose the correct word from the box!");
+        }
+
+        function addScore(points) {
+            gameScore += points;
+            const el = document.getElementById('gameScore');
+            el.textContent = gameScore;
+            el.classList.add('scale-125', 'text-amber-500');
+            setTimeout(() => el.classList.remove('scale-125', 'text-amber-500'), 300);
+        }
+
+        let confettiParticles = [];
+        let confettiAnimId = null;
+
+        function fireConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            if (!canvas) return;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const ctx = canvas.getContext('2d');
+
+            const colors = ['#F59E0B', '#EF4444', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#FDE047', '#06B6D4'];
+            confettiParticles = [];
+
+            for (let i = 0; i < 110; i++) {
+                confettiParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: -20 - Math.random() * 50,
+                    size: 8 + Math.random() * 8,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    vx: -3 + Math.random() * 6,
+                    vy: 3 + Math.random() * 5,
+                    rot: Math.random() * 360,
+                    vrot: -5 + Math.random() * 10,
+                    opacity: 1
+                });
+            }
+
+            if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
+
+            function step() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+
+                confettiParticles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.rot += p.vrot;
+                    if (p.y > canvas.height * 0.7) p.opacity -= 0.02;
+
+                    if (p.opacity > 0 && p.y < canvas.height + 40) {
+                        alive = true;
+                        ctx.save();
+                        ctx.globalAlpha = Math.max(0, p.opacity);
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate((p.rot * Math.PI) / 180);
+                        ctx.fillStyle = p.color;
+                        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                        ctx.restore();
+                    }
+                });
+
+                if (alive) {
+                    confettiAnimId = requestAnimationFrame(step);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            step();
+        }
+
+        // Initialize application on load
+        window.onload = function () {
+            initVoiceEngine();
+            renderWordBank();
+            renderWorksheetGrid();
+        };
+    </script>
+</body>
+</html>
